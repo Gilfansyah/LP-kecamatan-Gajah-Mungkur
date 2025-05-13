@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Admin</title>
+  <style>
+    body {
+      font-family: Arial;
+      margin: 40px;
+    }
+    .image-card {
+      display: inline-block;
+      border: 1px solid #ccc;
+      margin: 10px;
+      padding: 10px;
+      text-align: center;
+    }
+    .image-card img {
+      width: 200px;
+      height: 150px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dashboard Admin</h1>
+  <input type="file" id="imageInput" />
+  <button onclick="addImage()">Tambah Foto</button>
+
+  <div id="gallery"></div>
+
+  <script>
+    let gallery = document.getElementById("gallery");
+
+    function addImage() {
+      const input = document.getElementById("imageInput");
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const div = document.createElement("div");
+          div.className = "image-card";
+          div.innerHTML = `
+            <img src="${e.target.result}" />
+            <br />
+            <button onclick="editImage(this)">Edit</button>
+            <button onclick="deleteImage(this)">Hapus</button>
+          `;
+          gallery.appendChild(div);
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function deleteImage(btn) {
+      if (confirm("Yakin ingin menghapus foto ini?")) {
+        btn.parentElement.remove();
+      }
+    }
+
+    function editImage(btn) {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.onchange = function () {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          btn.parentElement.querySelector("img").src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      };
+      input.click();
+    }
+  </script>
+</body>
+</html>
